@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <stdexcept>
+#include <iostream>
 
 class Matrix {
 
@@ -18,7 +19,7 @@ public:
             throw std::invalid_argument("Invalid row");
         }
 
-        for(const auto& elem : init_data){
+        for(auto& elem : init_data){
             if(elem.empty()){
                 throw std::invalid_argument("Invalid col");
             }

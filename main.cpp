@@ -65,18 +65,18 @@ int main() {
             std :: cout << "Filename:\n";
             std :: cin >> filename;
 
-            std :: ofstream fout = std :: ofstream(filename);
-
             if(model.load_model_file(filename)){
                 std :: cout << "Loaded model - " + filename + " -\n";
             }
             else{
                 std :: cout << "Failed loading - " + filename + " -\n";
             }
+
+            state = 0;
         }
 
         if(state == 3){
-            
+
         }
     }
 }

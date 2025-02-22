@@ -12,14 +12,22 @@ class ML {
 public:
     ML() = default;
 
-    void set_filename(const std::string& filename);
     std::string get_filename() const;
-    bool load_model_file(const std::string& filename);
+    bool load_model_file(std::string& filename);
     Matrix MSE_loss_function(Matrix output, std :: vector<std :: vector<double>> expected_output);
     Matrix MSE_loss_derived(Matrix output, std :: vector<std :: vector<double>> expected_output);
-    Matrix cross_entropy_loss_function(Matrix output);
-    void forward(const Matrix& input, void (*final_activation)(Matrix), std :: vector<std :: vector<double>> expected_output, double learning_rate);
-    void backward(Matrix activated_output, std :: vector<std :: vector<double>> expected_output, double learning_rate);
+    Matrix cross_entropy_loss_function(Matrix output, std :: vector<std :: vector<double>> expected_output);
+    Matrix cross_entropy_loss_derived(Matrix output, std :: vector<std :: vector<double>> expected_output);
+    void forward(Matrix& input, void (*final_activation)(Matrix), void (*hidden_activation)(Matrix),
+                 Matrix (*final_derivative)(Matrix), Matrix (*hidden_derivative)(Matrix),
+                 Matrix (*final_cost)(Matrix, std :: vector<std :: vector<double>>),
+                 Matrix (*final_cost_derivative)(Matrix, std :: vector<std :: vector<double>>),
+                 std :: vector<std :: vector<double>> expected_output,
+                 double learning_rate);
+    void backward(const Matrix& activated_output, std :: vector<std :: vector<double>> expected_output,
+                  Matrix (*final_derivative)(Matrix), Matrix (*hidden_derivative)(Matrix),
+                  Matrix (*final_cost_derivative)(Matrix, std :: vector<std :: vector<double>>),
+                  double learning_rate);
 
     std::string filename;
     std::ofstream fout;
