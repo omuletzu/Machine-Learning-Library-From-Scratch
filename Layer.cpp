@@ -6,8 +6,6 @@ bool Layer :: set_matrixes(std :: ifstream& fin) {
     std :: vector<std::vector<double>> weight_final_matrix = std :: vector<std :: vector<double>>();
     std :: vector<std::vector<double>> bias_final_matrix = std :: vector<std :: vector<double>>();
 
-    std :: vector<double> bias_one_line = std :: vector<double>(1);
-
     if(this -> current_layer_nodes <= 0){
         return false;
     }
@@ -25,6 +23,8 @@ bool Layer :: set_matrixes(std :: ifstream& fin) {
         }
 
         weight_final_matrix.push_back(weight_matrix_line);
+
+        std :: vector<double> bias_one_line = std :: vector<double>(1);
 
         fin >> bias_one_line[0];
 

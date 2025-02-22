@@ -14,6 +14,7 @@ public:
 
     std::string get_filename() const;
     bool load_model_file(std::string& filename);
+    void update_model_file();
     Matrix MSE_loss_function(Matrix output, std :: vector<std :: vector<double>> expected_output);
     Matrix MSE_loss_derived(Matrix output, std :: vector<std :: vector<double>> expected_output);
     Matrix cross_entropy_loss_function(Matrix output, std :: vector<std :: vector<double>> expected_output);

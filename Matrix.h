@@ -31,7 +31,7 @@ public:
     }
 
     std::vector<std::vector<double>> get_matrix();
-    [[nodiscard]] std::vector<double> get_row_col() const;
+    std::pair<size_t, size_t> get_row_col();
     double at(int i, int j);
     void set(int i, int j, double value);
     static Matrix add_matrix(const Matrix& a, const Matrix& b);

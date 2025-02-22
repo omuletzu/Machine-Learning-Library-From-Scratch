@@ -37,10 +37,39 @@ bool ML :: load_model_file(std::string& filename) {
         this -> deactivated_value_per_layer = std :: vector<Matrix>(this -> layers_number);
         this -> activated_value_per_layers = std :: vector<Matrix>(this -> layers_number);
 
+        fin.close();
+
         return true;
     }
 
+    fin.close();
+
     return false;
+}
+
+void ML :: update_model_file() {
+    std :: ofstream fout = std :: ofstream(this -> filename);
+
+    fout << this -> layers_number << "\n";
+
+    for(int i = 0; i < this -> layers_number; i++){
+        fout << this -> nodes_per_layer_list[i] << "\n";
+    }
+
+    for(int i = 1; i < this -> layers_list.size(); i++) {
+        Matrix weight_matrix = this -> layers_list[i].matrix_weight.get_matrix();
+        Matrix bias_matrix = this -> layers_list[i].matrix_bias.get_matrix();
+
+        for(int j = 0; j < this -> layers_list[i].current_layer_nodes; j++){
+            for(int k = 0; k < this -> layers_list[i].prev_layer_nodes; k++){
+                fout << weight_matrix.at(j, k) << " ";
+            }
+
+            fout << bias_matrix.at(j, 0) << "\n";
+        }
+    }
+
+    fout.close();
 }
 
 Matrix ML :: MSE_loss_function(Matrix output, std :: vector<std :: vector<double>> expected_output) {
@@ -85,7 +114,7 @@ Matrix ML::cross_entropy_loss_function(Matrix output, std::vector<std::vector<do
 
         for(int j = 0; j < output_matrix.size(); j++){
             if(output_matrix[j][i] > 0){
-                final_sum += expected_output[j][i] * log(output_matrix[j][i] + 1e-9);
+                final_sum += expected_output[j][i] * log(std :: max(output_matrix[j][i], 1e-9));
             }
         }
 
@@ -102,7 +131,7 @@ Matrix ML::cross_entropy_loss_derived(Matrix output, std::vector<std::vector<dou
 
     for(int i = 0; i < output_matrix.size(); i++){
         for(int j = 0; j < output_matrix[i].size(); j++){
-            derived_matrix.set(i, j, -1 * expected_output[i][j] / output_matrix[i][j]);
+            derived_matrix.set(i, j, -1 * expected_output[i][j] / std :: max(output_matrix[i][j], 1e-9));
         }
     }
 
@@ -119,18 +148,18 @@ void ML :: forward(Matrix& input,
                    std :: vector<std :: vector<double>> expected_output,
                    double learning_rate) {
 
-    std::vector<double> row_col = input.get_row_col();
-    double row = row_col[0];
-    double col = row_col[1];
+    std :: pair<int, int> row_col = input.get_row_col();
+    int row = row_col.first;
 
     if(row != this -> nodes_per_layer_list[0]){
         throw std :: invalid_argument("Invalid input");
     }
 
-    this -> activated_value_per_layers[0] = input;
     this -> deactivated_value_per_layer[0] = input;
 
-    Matrix :: reLU_activation(this -> activated_value_per_layers[0]);
+    hidden_activation(this -> activated_value_per_layers[0]);
+
+    this -> activated_value_per_layers[0] = input;
 
     Matrix partial_result = input;
 
@@ -149,7 +178,9 @@ void ML :: forward(Matrix& input,
         this -> activated_value_per_layers[i] = partial_result;
     }
 
-    backward(partial_result, std::move(expected_output), final_derivative, hidden_derivative, final_cost_derivative, learning_rate);
+    backward(partial_result, expected_output, final_derivative, hidden_derivative, final_cost_derivative, learning_rate);
+
+    update_model_file();
 }
 
 void correct_weight_bias(Layer& layer, Matrix gradient_values, Matrix& activation_values, double learning_rate) {
@@ -179,7 +210,7 @@ void ML :: backward(const Matrix& activated_output,
                     Matrix (*final_cost_derivative)(Matrix, std :: vector<std :: vector<double>>),
                     double learning_rate) {
 
-    Matrix current_layer_gradient = Matrix :: mul_simple_matrix(final_cost_derivative(activated_output, std::move(expected_output)), final_derivative(activated_output));
+    Matrix current_layer_gradient = Matrix :: mul_simple_matrix(final_cost_derivative(activated_output, expected_output), final_derivative(activated_output));
 
     correct_weight_bias(layers_list[layers_list.size() - 1], current_layer_gradient, activated_value_per_layers[activated_value_per_layers.size() - 2], learning_rate);
 

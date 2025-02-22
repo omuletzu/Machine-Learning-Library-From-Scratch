@@ -23,13 +23,10 @@ std::vector<std::vector<double>> Matrix :: get_matrix() {
     return this->matrix;
 }
 
-std::vector<double> Matrix :: get_row_col() const {
-    std::vector<double> row_col = std::vector<double>(2);
-    row_col[0] = this->row;
-    row_col[1] = this->col;
-
-    return row_col;
+std::pair<size_t, size_t> Matrix :: get_row_col() {
+    return {this->row, this->col};
 }
+
 
 Matrix Matrix :: add_matrix(const Matrix& a, const Matrix& b) {
     if(a.matrix.size() != b.matrix.size()){
@@ -43,7 +40,7 @@ Matrix Matrix :: add_matrix(const Matrix& a, const Matrix& b) {
     Matrix result = a;
 
     for(int i = 0; i < b.matrix.size(); i++){
-        for(int j = 0; j < result.matrix.size(); j++){
+        for(int j = 0; j < b.matrix[i].size(); j++){
             result.matrix[i][j] += b.matrix[i][j];
         }
     }
@@ -63,7 +60,7 @@ Matrix Matrix :: sub_matrix(const Matrix& a, const Matrix& b) {
     Matrix result = a;
 
     for(int i = 0; i < b.matrix.size(); i++){
-        for(int j = 0; j < result.matrix.size(); j++){
+        for(int j = 0; j < b.matrix[i].size(); j++){
             result.matrix[i][j] -= b.matrix[i][j];
         }
     }
@@ -101,7 +98,7 @@ Matrix Matrix :: div_matrix(const Matrix& a, const Matrix& b) {
     Matrix result = a;
 
     for(int i = 0; i < b.matrix.size(); i++){
-        for(int j = 0; j < result.matrix.size(); j++){
+        for(int j = 0; j < b.matrix[i].size(); j++){
             result.matrix[i][j] /= b.matrix[i][j];
         }
     }
@@ -121,7 +118,7 @@ Matrix Matrix :: mul_simple_matrix(const Matrix &a, const Matrix &b) {
     Matrix result = a;
 
     for(int i = 0; i < b.matrix.size(); i++){
-        for(int j = 0; j < result.matrix.size(); j++){
+        for(int j = 0; j < b.matrix[i].size(); j++){
             result.matrix[i][j] *= b.matrix[i][j];
         }
     }
