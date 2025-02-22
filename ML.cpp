@@ -49,12 +49,13 @@ Matrix ML :: MSE_loss_function(Matrix output, std :: vector<std :: vector<double
     Matrix cost(1, output_matrix[0].size());
 
     for(int i = 0; i < output_matrix[0].size(); i++){
+        double final_sum = 0.0;
+
         for(int j = 0; j < output_matrix.size(); j++){
-            double partial_sum = cost.at(0, i);
-            cost.set(0, i, partial_sum + (output_matrix[j][i] - expected_output[j][i]) * (output_matrix[j][i] - expected_output[j][i]));
+            final_sum += (output_matrix[j][i] - expected_output[j][i]) * (output_matrix[j][i] - expected_output[j][i]);
         }
 
-        cost.set(0, i, cost.at(0, i) * 0.5);
+        cost.set(0, i, final_sum * 0.5);
     }
 
     return cost;
@@ -75,11 +76,37 @@ Matrix ML :: MSE_loss_derived(Matrix output, std :: vector<std :: vector<double>
 }
 
 Matrix ML::cross_entropy_loss_function(Matrix output, std::vector<std::vector<double>> expected_output) {
-    return Matrix();
+    std :: vector<std :: vector<double>> output_matrix = output.get_matrix();
+
+    Matrix cost(1, output_matrix[0].size());
+
+    for(int i = 0; i < output_matrix[0].size(); i++){
+        double final_sum = 0.0;
+
+        for(int j = 0; j < output_matrix.size(); j++){
+            if(output_matrix[j][i] > 0){
+                final_sum += expected_output[j][i] * log(output_matrix[j][i] + 1e-9);
+            }
+        }
+
+        cost.set(0, i, -1 * final_sum);
+    }
+
+    return cost;
 }
 
 Matrix ML::cross_entropy_loss_derived(Matrix output, std::vector<std::vector<double>> expected_output) {
-    return Matrix();
+    std :: vector<std :: vector<double>> output_matrix = output.get_matrix();
+
+    Matrix derived_matrix(output_matrix.size(), output_matrix[0].size());
+
+    for(int i = 0; i < output_matrix.size(); i++){
+        for(int j = 0; j < output_matrix[i].size(); j++){
+            derived_matrix.set(i, j, -1 * expected_output[i][j] / output_matrix[i][j]);
+        }
+    }
+
+    return derived_matrix;
 }
 
 void ML :: forward(Matrix& input,
