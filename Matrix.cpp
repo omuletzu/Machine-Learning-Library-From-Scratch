@@ -129,9 +129,9 @@ Matrix Matrix :: mul_simple_matrix(const Matrix &a, const Matrix &b) {
 Matrix Matrix::transpose(const Matrix &a) {
     Matrix result(a.matrix[0].size(), a.matrix.size());
 
-    for(int i = 0; i < result.matrix.size(); i++){
-        for(int j = 0; j < result.matrix[i].size(); j++){
-            result.matrix[i][j] = a.matrix[j][i];
+    for(int i = 0; i < a.row; i++){
+        for(int j = 0; j < a.col; j++){
+            result.matrix[j][i] = a.matrix[i][j];
         }
     }
 
@@ -177,9 +177,17 @@ Matrix Matrix :: sigmoid_derivative(Matrix value) {
 
 void Matrix::softmax_activation(Matrix& value) {
     for(int i = 0; i < value.matrix[0].size(); i++){
+
+        double max_value = -INFINITY;
+
+        for(auto & j : value.matrix){
+            max_value = std :: max(j[i], max_value);
+        }
+
         double exp_sum = 0.0;
 
         for(auto & j : value.matrix){
+            j[i] = exp(j[i] - max_value);
             exp_sum += j[i];
         }
 
