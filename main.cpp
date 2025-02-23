@@ -77,9 +77,20 @@ int main() {
             state = 0;
         }
 
-        if(state == 3){
-            std :: vector<std :: vector<double>> train_dataset = read_dataset("mnist/train-images-idx3-ubyte");
-            std :: vector<uint8_t> train_dataset_labels = read_dataset_labels("mnist/train-labels-idx1-ubyte");
+        if(state == 3 || state == 4){
+            std :: vector<std :: vector<double>> train_dataset;
+            std :: vector<uint8_t> train_dataset_labels;
+            bool model_training = false;
+
+            if(state == 3){
+                std :: vector<std :: vector<double>> train_dataset = read_dataset("mnist/train-images-idx3-ubyte");
+                std :: vector<uint8_t> train_dataset_labels = read_dataset_labels("mnist/train-labels-idx1-ubyte");
+                model_training = true;
+            }
+            else{
+                std :: vector<std :: vector<double>> train_dataset = read_dataset("mnist/t10k-images-idx3-ubyte");
+                std :: vector<uint8_t> train_dataset_labels = read_dataset_labels("mnist/t10k-labels-idx1-ubyte");
+            }
 
             int epoch_iterations = 0;
             int input_batch_size = 0;
@@ -132,7 +143,7 @@ int main() {
                             ML :: cross_entropy_loss_with_softmax_derived,  //lost cost derivative
                             expected_outputs.get_matrix(),
                             learning_rate,
-                            true
+                            model_training
                             );
 
                     for(int k = 0; k < input_batch_size; k++){
@@ -143,7 +154,7 @@ int main() {
                 partial_loss /= train_dataset.size();
                 total_loss += partial_loss;
 
-                loss_log << "For iteration " << i << " loss " << partial_loss >> "\n";
+                loss_log << "For iteration " << i << " loss " << partial_loss << "\n";
             }
 
             model.update_model_file();
@@ -153,10 +164,6 @@ int main() {
             loss_log << "Final loss " << total_loss << "\n";
 
             state = 0;
-        }
-
-        if(state == 4){
-
         }
     }
 }
