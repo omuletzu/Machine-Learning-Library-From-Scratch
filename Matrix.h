@@ -14,6 +14,10 @@ public:
         this->matrix = std::vector<std::vector<double>>(row, std::vector<double>(col, 0));
     };
 
+    Matrix(int row, int col, double init_value) : row(row), col(col) {
+        this->matrix = std::vector<std::vector<double>>(row, std::vector<double>(col, init_value));
+    };
+
     Matrix(std::vector<std::vector<double>> init_data) {
         if(init_data.empty()){
             throw std::invalid_argument("Invalid row");

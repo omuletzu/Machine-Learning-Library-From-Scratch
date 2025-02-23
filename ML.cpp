@@ -193,10 +193,16 @@ Matrix ML :: forward(Matrix& input,
 }
 
 void correct_weight_bias(Layer& layer, Matrix gradient_values, Matrix& activation_values, double learning_rate) {
+
     Matrix weight_gradient_matrix = Matrix :: mul_matrix(gradient_values, Matrix :: transpose(activation_values));
 
     std :: vector<std :: vector<double>> weight_matrix_get = layer.matrix_weight.get_matrix();
     std :: vector<std :: vector<double>> weight_gradient_matrix_get = weight_gradient_matrix.get_matrix();
+
+    std :: vector<std :: vector<double>> divide_multiple_active_inputs_matrix = std :: vector<std :: vector<double>>(
+            weight_gradient_matrix_get.size(), std :: vector<double>(weight_gradient_matrix_get[0].size(), 1 / gradient_values.get_matrix()[0].size());
+            );
+    Matrix divide_multiple_active_inputs = Matrix(divide_multiple_active_inputs_matrix);
 
     for(int i = 0; i < weight_matrix_get.size(); i++) {
         for(int j = 0; j < weight_matrix_get[i].size(); j++) {
@@ -219,7 +225,7 @@ void ML :: backward(const Matrix& activated_output,
                     Matrix (*final_cost_derivative)(Matrix, std :: vector<std :: vector<double>>),
                     double learning_rate) {
 
-    Matrix current_layer_gradient = Matrix :: mul_simple_matrix(final_cost_derivative(activated_output, expected_output), final_derivative(activated_output)); // softmax derivat foloseste activ sau deactiv
+    Matrix current_layer_gradient = Matrix :: mul_simple_matrix(final_cost_derivative(activated_output, expected_output), final_derivative(deactivated_value_per_layer[deactivated_value_per_layer.size() - 1]));
 
     correct_weight_bias(layers_list[layers_list.size() - 1], current_layer_gradient, activated_value_per_layers[activated_value_per_layers.size() - 2], learning_rate);
 

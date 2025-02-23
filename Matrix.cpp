@@ -198,20 +198,14 @@ void Matrix::softmax_activation(Matrix& value) {
 }
 
 Matrix Matrix :: softmax_derivative(Matrix value) {
-    for(int i = 0; i < value.matrix[0].size(); i++){
-        double exp_sum = 0.0;
+    Matrix derived_matrix = value;
+    Matrix :: softmax_activation(derived_matrix);
 
-        for(auto & j : value.matrix){
-            exp_sum += j[i];
-        }
+    Matrix full_one_matrix = Matrix(derived_matrix.matrix.size(), derived_matrix.matrix[0].size(), 1.0);
 
-        for(auto & j : value.matrix){
-            double softmax = exp(j[i]) / exp_sum;
-            j[i] = softmax * (1 - softmax);
-        }
-    }
+    derived_matrix = Matrix :: mul_simple_matrix(derived_matrix, Matrix :: sub_matrix(full_one_matrix, derived_matrix));
 
-    return value;
+    return derived_matrix;
 }
 
 Matrix::Matrix() {}
