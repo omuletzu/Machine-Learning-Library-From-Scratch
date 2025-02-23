@@ -81,7 +81,14 @@ int main() {
             std :: vector<std :: vector<double>> train_dataset = read_dataset("mnist/train-images-idx3-ubyte");
             std :: vector<uint8_t> train_dataset_labels = read_dataset_labels("mnist/train-labels-idx1-ubyte");
 
-            std :: cout << int(train_dataset_labels[4]);
+            int epoch_iterations = 0;
+            int input_batch_size = 0;
+
+            std :: cout << "Epoch number of iterations\n";
+            std :: cin >> epoch_iterations;
+
+            std :: cout << "\nInput batch size\n";
+            std :: cin >> input_batch_size;
 
             if(train_dataset.empty()) {
                 throw std :: invalid_argument("Empty dataset");
@@ -91,9 +98,22 @@ int main() {
                 throw std :: invalid_argument("Input layer nodes number doesn't correspond to data set element size");
             }
 
-            for(int i = 0; i < 15; i++) {
-                for(auto data : train_dataset) {
+            double total_loss = 0.0;
 
+            for(int i = 0; i < epoch_iterations; i++) {
+
+                double partial_loss = 0.0;
+
+                for(int j = 0; j < train_dataset.size(); j += input_batch_size) {
+                    Matrix images_converted_to_batch_input = Matrix :: transpose(Matrix(train_dataset));
+
+                    Matrix activated_output = model.forward(
+                            images_converted_to_batch_input,
+                            Matrix :: softmax_activation,
+                            Matrix ::reLU_activation,
+                            ML :: cross_entropy_loss_with_softmax_derived,
+                            ML ::
+                            );
                 }
             }
 

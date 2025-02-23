@@ -141,7 +141,7 @@ Matrix ML::cross_entropy_loss_with_softmax_derived(Matrix output, std::vector<st
     return derived_matrix;
 }
 
-void ML :: forward(Matrix& input,
+Matrix ML :: forward(Matrix& input,
                    void (*final_activation)(Matrix),
                    void (*hidden_activation)(Matrix),
                    Matrix (*final_derivative)(Matrix),
@@ -164,10 +164,9 @@ void ML :: forward(Matrix& input,
     }
 
     this -> deactivated_value_per_layer[0] = input;
+    this -> activated_value_per_layers[0] = input;
 
     hidden_activation(this -> activated_value_per_layers[0]);
-
-    this -> activated_value_per_layers[0] = input;
 
     Matrix partial_result = input;
 
@@ -189,9 +188,8 @@ void ML :: forward(Matrix& input,
     if(enable_backward) {
         backward(partial_result, expected_output, final_derivative, hidden_derivative, final_cost_derivative, learning_rate);
     }
-    else{
 
-    }
+    return final_cost(partial_result, expected_output);
 }
 
 void correct_weight_bias(Layer& layer, Matrix gradient_values, Matrix& activation_values, double learning_rate) {
@@ -221,7 +219,7 @@ void ML :: backward(const Matrix& activated_output,
                     Matrix (*final_cost_derivative)(Matrix, std :: vector<std :: vector<double>>),
                     double learning_rate) {
 
-    Matrix current_layer_gradient = Matrix :: mul_simple_matrix(final_cost_derivative(activated_output, expected_output), final_derivative(activated_output));
+    Matrix current_layer_gradient = Matrix :: mul_simple_matrix(final_cost_derivative(activated_output, expected_output), final_derivative(activated_output)); // softmax derivat foloseste activ sau deactiv
 
     correct_weight_bias(layers_list[layers_list.size() - 1], current_layer_gradient, activated_value_per_layers[activated_value_per_layers.size() - 2], learning_rate);
 
