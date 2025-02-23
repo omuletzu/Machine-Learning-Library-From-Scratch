@@ -19,6 +19,15 @@ void Matrix :: set(int i, int j, double value) {
     }
 }
 
+void Matrix :: print_matrix(const Matrix& a) {
+    for(auto i : a.matrix){
+        for(auto j : i){
+            std :: cout << j << " ";
+        }
+        std :: cout << "\n";
+    }
+}
+
 std::vector<std::vector<double>> Matrix :: get_matrix() {
     return this->matrix;
 }
@@ -177,7 +186,6 @@ Matrix Matrix :: sigmoid_derivative(Matrix value) {
 
 void Matrix :: softmax_activation(Matrix& value) {
     for(int i = 0; i < value.matrix[0].size(); i++){
-
         double max_value = -INFINITY;
 
         for(auto & j : value.matrix){
