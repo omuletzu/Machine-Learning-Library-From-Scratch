@@ -78,18 +78,18 @@ int main() {
         }
 
         if(state == 3 || state == 4){
-            std :: vector<std :: vector<double>> train_dataset;
-            std :: vector<uint8_t> train_dataset_labels;
+            std :: vector<std :: vector<double>> dataset;
+            std :: vector<uint8_t> dataset_labels;
             bool model_training = false;
 
             if(state == 3){
-                std :: vector<std :: vector<double>> train_dataset = read_dataset("mnist/train-images-idx3-ubyte");
-                std :: vector<uint8_t> train_dataset_labels = read_dataset_labels("mnist/train-labels-idx1-ubyte");
+                dataset = read_dataset("mnist/train-images-idx3-ubyte");
+                dataset_labels = read_dataset_labels("mnist/train-labels-idx1-ubyte");
                 model_training = true;
             }
             else{
-                std :: vector<std :: vector<double>> train_dataset = read_dataset("mnist/t10k-images-idx3-ubyte");
-                std :: vector<uint8_t> train_dataset_labels = read_dataset_labels("mnist/t10k-labels-idx1-ubyte");
+                dataset = read_dataset("mnist/t10k-images-idx3-ubyte");
+                dataset_labels = read_dataset_labels("mnist/t10k-labels-idx1-ubyte");
             }
 
             int epoch_iterations = 0;
@@ -105,11 +105,11 @@ int main() {
             std :: cout << "\nLearning rate:\n";
             std :: cin >> learning_rate;
 
-            if(train_dataset.empty()) {
+            if(dataset.empty()) {
                 throw std :: invalid_argument("Empty dataset");
             }
 
-            if(train_dataset[0].size() != model.nodes_per_layer_list[0]) {
+            if(dataset[0].size() != model.nodes_per_layer_list[0]) {
                 throw std :: invalid_argument("Input layer nodes number doesn't correspond to data set element size");
             }
 
@@ -121,15 +121,15 @@ int main() {
 
                 double partial_loss = 0.0;
 
-                for(int j = 0; j < train_dataset.size(); j += input_batch_size) {
+                for(int j = 0; j < dataset.size(); j += input_batch_size) {
                     Matrix images_converted_to_batch_input = Matrix :: transpose(
-                            Matrix(std :: vector<std :: vector<double>>(train_dataset.begin() + j, train_dataset.begin() + j + input_batch_size))
+                            Matrix(std :: vector<std :: vector<double>>(dataset.begin() + j, dataset.begin() + j + input_batch_size))
                             );
 
                     Matrix expected_outputs = Matrix(model.nodes_per_layer_list[model.nodes_per_layer_list.size() - 1], input_batch_size);
 
                     for(int k = 0; k < input_batch_size; k++){
-                        int label = train_dataset_labels[j + k];
+                        int label = dataset_labels[j + k];
                         expected_outputs.set(label, k, 1.0);
                     }
 
@@ -151,7 +151,7 @@ int main() {
                     }
                 }
 
-                partial_loss /= train_dataset.size();
+                partial_loss /= dataset.size();
                 total_loss += partial_loss;
 
                 loss_log << "For iteration " << i << " loss " << partial_loss << "\n";
