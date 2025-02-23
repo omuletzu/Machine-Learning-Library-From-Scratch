@@ -200,7 +200,7 @@ void correct_weight_bias(Layer& layer, Matrix gradient_values, Matrix& activatio
     std :: vector<std :: vector<double>> weight_gradient_matrix_get = weight_gradient_matrix.get_matrix();
 
     std :: vector<std :: vector<double>> divide_multiple_active_inputs_matrix = std :: vector<std :: vector<double>>(
-            weight_gradient_matrix_get.size(), std :: vector<double>(weight_gradient_matrix_get[0].size(), 1 / gradient_values.get_matrix()[0].size());
+            weight_gradient_matrix_get.size(), std :: vector<double>(weight_gradient_matrix_get[0].size(), 1 / gradient_values.get_matrix()[0].size())
             );
     Matrix divide_multiple_active_inputs = Matrix(divide_multiple_active_inputs_matrix);
 
