@@ -175,7 +175,7 @@ Matrix Matrix :: sigmoid_derivative(Matrix value) {
     return value;
 }
 
-void Matrix::softmax_activation(Matrix& value) {
+void Matrix :: softmax_activation(Matrix& value) {
     for(int i = 0; i < value.matrix[0].size(); i++){
 
         double max_value = -INFINITY;
@@ -208,4 +208,4 @@ Matrix Matrix :: softmax_derivative(Matrix value) {
     return derived_matrix;
 }
 
-Matrix::Matrix() {}
+Matrix :: Matrix() {}

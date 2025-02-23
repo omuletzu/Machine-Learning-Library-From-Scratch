@@ -20,8 +20,8 @@ public:
     static Matrix cross_entropy_loss_function_with_softmax(Matrix output, std :: vector<std :: vector<double>> expected_output);
     static Matrix cross_entropy_loss_with_softmax_derived(Matrix output, std :: vector<std :: vector<double>> expected_output);
     Matrix forward(Matrix& input,
-                   void (*final_activation)(Matrix),
-                   void (*hidden_activation)(Matrix),
+                   void (*final_activation)(Matrix&),
+                   void (*hidden_activation)(Matrix&),
                    Matrix (*final_derivative)(Matrix), Matrix (*hidden_derivative)(Matrix),
                    Matrix (*final_cost)(Matrix, std :: vector<std :: vector<double>>),
                    Matrix (*final_cost_derivative)(Matrix, std :: vector<std :: vector<double>>),

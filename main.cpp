@@ -83,12 +83,16 @@ int main() {
 
             int epoch_iterations = 0;
             int input_batch_size = 0;
+            double learning_rate = 0.0;
 
-            std :: cout << "Epoch number of iterations\n";
+            std :: cout << "Epoch number of iterations:\n";
             std :: cin >> epoch_iterations;
 
-            std :: cout << "\nInput batch size\n";
+            std :: cout << "\nInput batch size:\n";
             std :: cin >> input_batch_size;
+
+            std :: cout << "\nLearning rate:\n";
+            std :: cin >> learning_rate;
 
             if(train_dataset.empty()) {
                 throw std :: invalid_argument("Empty dataset");
@@ -98,6 +102,8 @@ int main() {
                 throw std :: invalid_argument("Input layer nodes number doesn't correspond to data set element size");
             }
 
+            std :: ofstream loss_log("loss_log.txt");
+
             double total_loss = 0.0;
 
             for(int i = 0; i < epoch_iterations; i++) {
@@ -105,19 +111,46 @@ int main() {
                 double partial_loss = 0.0;
 
                 for(int j = 0; j < train_dataset.size(); j += input_batch_size) {
-                    Matrix images_converted_to_batch_input = Matrix :: transpose(Matrix(train_dataset));
+                    Matrix images_converted_to_batch_input = Matrix :: transpose(
+                            Matrix(std :: vector<std :: vector<double>>(train_dataset.begin() + j, train_dataset.begin() + j + input_batch_size))
+                            );
+
+                    Matrix expected_outputs = Matrix(model.nodes_per_layer_list[model.nodes_per_layer_list.size() - 1], input_batch_size);
+
+                    for(int k = 0; k < input_batch_size; k++){
+                        int label = train_dataset_labels[j + k];
+                        expected_outputs.set(label, k, 1.0);
+                    }
 
                     Matrix activated_output = model.forward(
                             images_converted_to_batch_input,
-                            Matrix :: softmax_activation,
-                            Matrix ::reLU_activation,
-                            ML :: cross_entropy_loss_with_softmax_derived,
-                            ML ::
+                            Matrix :: softmax_activation,   //final activation
+                            Matrix ::reLU_activation,       //hidden activation
+                            Matrix :: softmax_derivative,   //final derivative
+                            Matrix :: reLU_derivative,      //hidden derivative
+                            ML :: cross_entropy_loss_function_with_softmax, //loss cost
+                            ML :: cross_entropy_loss_with_softmax_derived,  //lost cost derivative
+                            expected_outputs.get_matrix(),
+                            learning_rate,
+                            true
                             );
+
+                    for(int k = 0; k < input_batch_size; k++){
+                        partial_loss += activated_output.at(0, k);
+                    }
                 }
+
+                partial_loss /= train_dataset.size();
+                total_loss += partial_loss;
+
+                loss_log << "For iteration " << i << " loss " << partial_loss >> "\n";
             }
 
             model.update_model_file();
+
+            total_loss /= epoch_iterations;
+
+            loss_log << "Final loss " << total_loss << "\n";
 
             state = 0;
         }
