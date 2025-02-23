@@ -11,4 +11,9 @@ add_executable(ML_lib main.cpp
         Layer.cpp
         Layer.h
         Node.cpp
-        Node.h)
+        Node.h
+        mnist/mnist_reader.h
+        mnist/mnist_reader.h
+)
+
+include_directories(${CMAKE_SOURCE_DIR}/mnist)

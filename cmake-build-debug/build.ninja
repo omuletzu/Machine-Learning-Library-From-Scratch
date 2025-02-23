@@ -52,30 +52,35 @@ build cmake_object_order_depends_target_ML_lib: phony || CMakeFiles/ML_lib.dir
 build CMakeFiles/ML_lib.dir/main.cpp.obj: CXX_COMPILER__ML_lib_unscanned_Debug D$:/FACULTATE/ML_lib/main.cpp || cmake_object_order_depends_target_ML_lib
   DEP_FILE = CMakeFiles\ML_lib.dir\main.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -ID:/FACULTATE/ML_lib/mnist
   OBJECT_DIR = CMakeFiles\ML_lib.dir
   OBJECT_FILE_DIR = CMakeFiles\ML_lib.dir
 
 build CMakeFiles/ML_lib.dir/Matrix.cpp.obj: CXX_COMPILER__ML_lib_unscanned_Debug D$:/FACULTATE/ML_lib/Matrix.cpp || cmake_object_order_depends_target_ML_lib
   DEP_FILE = CMakeFiles\ML_lib.dir\Matrix.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -ID:/FACULTATE/ML_lib/mnist
   OBJECT_DIR = CMakeFiles\ML_lib.dir
   OBJECT_FILE_DIR = CMakeFiles\ML_lib.dir
 
 build CMakeFiles/ML_lib.dir/ML.cpp.obj: CXX_COMPILER__ML_lib_unscanned_Debug D$:/FACULTATE/ML_lib/ML.cpp || cmake_object_order_depends_target_ML_lib
   DEP_FILE = CMakeFiles\ML_lib.dir\ML.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -ID:/FACULTATE/ML_lib/mnist
   OBJECT_DIR = CMakeFiles\ML_lib.dir
   OBJECT_FILE_DIR = CMakeFiles\ML_lib.dir
 
 build CMakeFiles/ML_lib.dir/Layer.cpp.obj: CXX_COMPILER__ML_lib_unscanned_Debug D$:/FACULTATE/ML_lib/Layer.cpp || cmake_object_order_depends_target_ML_lib
   DEP_FILE = CMakeFiles\ML_lib.dir\Layer.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -ID:/FACULTATE/ML_lib/mnist
   OBJECT_DIR = CMakeFiles\ML_lib.dir
   OBJECT_FILE_DIR = CMakeFiles\ML_lib.dir
 
 build CMakeFiles/ML_lib.dir/Node.cpp.obj: CXX_COMPILER__ML_lib_unscanned_Debug D$:/FACULTATE/ML_lib/Node.cpp || cmake_object_order_depends_target_ML_lib
   DEP_FILE = CMakeFiles\ML_lib.dir\Node.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -ID:/FACULTATE/ML_lib/mnist
   OBJECT_DIR = CMakeFiles\ML_lib.dir
   OBJECT_FILE_DIR = CMakeFiles\ML_lib.dir
 

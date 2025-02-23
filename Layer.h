@@ -7,7 +7,7 @@
 class Layer {
 public:
 
-    Layer() : current_layer_nodes(0), prev_layer_nodes(0) {};
+    Layer();
 
     Layer(int current_layer_nodes, int prev_layer_nodes, std::ifstream& fin) :
         current_layer_nodes(current_layer_nodes),

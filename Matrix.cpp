@@ -192,7 +192,7 @@ void Matrix::softmax_activation(Matrix& value) {
         }
 
         for(auto & j : value.matrix){
-            j[i] = exp(j[i]) / exp_sum;
+            j[i] /= exp_sum;
         }
     }
 }

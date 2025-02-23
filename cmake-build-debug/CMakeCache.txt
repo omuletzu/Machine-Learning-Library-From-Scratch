@@ -248,6 +248,9 @@ ML_lib_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 ML_lib_SOURCE_DIR:STATIC=D:/FACULTATE/ML_lib
 
+//The directory containing a CMake configuration file for MNIST.
+MNIST_DIR:PATH=MNIST_DIR-NOTFOUND
+
 
 ########################
 # INTERNAL cache entries

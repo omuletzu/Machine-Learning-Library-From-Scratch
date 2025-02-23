@@ -2,6 +2,7 @@
 #include <string>
 #include "ML.h"
 #include "Matrix.h"
+#include "mnist_reader.h"
 
 int main() {
 
@@ -15,6 +16,7 @@ int main() {
             std :: cout << "\t 1. Create new model file\n";
             std :: cout << "\t 2. Load model file\n";
             std :: cout << "\t 3. Train model\n";
+            std :: cout << "\t 4. Test model\n";
             std :: cin >> state;
         }
 
@@ -76,6 +78,31 @@ int main() {
         }
 
         if(state == 3){
+            std :: vector<std :: vector<double>> train_dataset = read_dataset("mnist/train-images-idx3-ubyte");
+            std :: vector<uint8_t> train_dataset_labels = read_dataset_labels("mnist/train-labels-idx1-ubyte");
+
+            std :: cout << int(train_dataset_labels[4]);
+
+            if(train_dataset.empty()) {
+                throw std :: invalid_argument("Empty dataset");
+            }
+
+            if(train_dataset[0].size() != model.nodes_per_layer_list[0]) {
+                throw std :: invalid_argument("Input layer nodes number doesn't correspond to data set element size");
+            }
+
+            for(int i = 0; i < 15; i++) {
+                for(auto data : train_dataset) {
+
+                }
+            }
+
+            model.update_model_file();
+
+            state = 0;
+        }
+
+        if(state == 4){
 
         }
     }

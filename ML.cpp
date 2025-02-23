@@ -28,6 +28,9 @@ bool ML :: load_model_file(std::string& filename) {
             fin >> this -> nodes_per_layer_list[i];
         }
 
+        //std :: ifstream aux_not_used_istream("");
+        //this -> layers_list.emplace_back(this -> nodes_per_layer_list[0], 0, aux_not_used_istream);
+
         this -> layers_list.emplace_back();
 
         for(int i = 1; i < this -> layers_number; i++){
@@ -104,7 +107,7 @@ Matrix ML :: MSE_loss_derived(Matrix output, std :: vector<std :: vector<double>
     return derived_matrix;
 }
 
-Matrix ML::cross_entropy_loss_function(Matrix output, std::vector<std::vector<double>> expected_output) {
+Matrix ML::cross_entropy_loss_function_with_softmax(Matrix output, std::vector<std::vector<double>> expected_output) {
     std :: vector<std :: vector<double>> output_matrix = output.get_matrix();
 
     Matrix cost(1, output_matrix[0].size());
@@ -124,14 +127,14 @@ Matrix ML::cross_entropy_loss_function(Matrix output, std::vector<std::vector<do
     return cost;
 }
 
-Matrix ML::cross_entropy_loss_derived(Matrix output, std::vector<std::vector<double>> expected_output) {
+Matrix ML::cross_entropy_loss_with_softmax_derived(Matrix output, std::vector<std::vector<double>> expected_output) {
     std :: vector<std :: vector<double>> output_matrix = output.get_matrix();
 
     Matrix derived_matrix(output_matrix.size(), output_matrix[0].size());
 
     for(int i = 0; i < output_matrix.size(); i++){
         for(int j = 0; j < output_matrix[i].size(); j++){
-            derived_matrix.set(i, j, -1 * expected_output[i][j] / std :: max(output_matrix[i][j], 1e-9));
+            derived_matrix.set(i, j, output_matrix[i][j] - expected_output[i][j]);
         }
     }
 
@@ -146,13 +149,18 @@ void ML :: forward(Matrix& input,
                    Matrix (*final_cost)(Matrix, std :: vector<std :: vector<double>>),
                    Matrix (*final_cost_derivative)(Matrix, std :: vector<std :: vector<double>>),
                    std :: vector<std :: vector<double>> expected_output,
-                   double learning_rate) {
+                   double learning_rate,
+                   bool enable_backward) {
 
     std :: pair<int, int> row_col = input.get_row_col();
     int row = row_col.first;
 
     if(row != this -> nodes_per_layer_list[0]){
         throw std :: invalid_argument("Invalid input");
+    }
+
+    if(expected_output.size() != nodes_per_layer_list[nodes_per_layer_list.size() - 1]){
+        throw std :: invalid_argument("Invalid expected output");
     }
 
     this -> deactivated_value_per_layer[0] = input;
@@ -178,9 +186,12 @@ void ML :: forward(Matrix& input,
         this -> activated_value_per_layers[i] = partial_result;
     }
 
-    backward(partial_result, expected_output, final_derivative, hidden_derivative, final_cost_derivative, learning_rate);
+    if(enable_backward) {
+        backward(partial_result, expected_output, final_derivative, hidden_derivative, final_cost_derivative, learning_rate);
+    }
+    else{
 
-    update_model_file();
+    }
 }
 
 void correct_weight_bias(Layer& layer, Matrix gradient_values, Matrix& activation_values, double learning_rate) {
