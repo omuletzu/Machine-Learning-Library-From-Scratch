@@ -10,12 +10,15 @@ double Matrix :: at(int i, int j) {
         return this->matrix[i][j];
     }
 
-    return 0.0;
+    throw std :: invalid_argument("Cannot access matrix element");
 }
 
 void Matrix :: set(int i, int j, double value) {
     if(check_bound(i, j, this->row, this->col)){
         this->matrix[i][j] = value;
+    }
+    else{
+        throw std :: invalid_argument("Cannot set matrix element");
     }
 }
 
@@ -39,11 +42,11 @@ std::pair<size_t, size_t> Matrix :: get_row_col() {
 
 Matrix Matrix :: add_matrix(const Matrix& a, const Matrix& b) {
     if(a.matrix.size() != b.matrix.size()){
-        return {0, 0};
+        throw std :: invalid_argument("Cannot add matrices");
     }
 
     if(a.matrix[0].size() != b.matrix[0].size()){
-        return {0, 0};
+        throw std :: invalid_argument("Cannot add matrices");
     }
 
     Matrix result = a;
@@ -59,7 +62,7 @@ Matrix Matrix :: add_matrix(const Matrix& a, const Matrix& b) {
 
 Matrix Matrix :: add_broadcast_matrix(const Matrix& a, const Matrix& b) {
     if(a.matrix.size() != b.matrix.size() || b.matrix[0].size() != 1){
-        return Matrix{0, 0};
+        throw std :: invalid_argument("Cannot broadcast add matrixes");
     }
 
     Matrix result = a;
@@ -75,11 +78,11 @@ Matrix Matrix :: add_broadcast_matrix(const Matrix& a, const Matrix& b) {
 
 Matrix Matrix :: sub_matrix(const Matrix& a, const Matrix& b) {
     if(a.matrix.size() != b.matrix.size()){
-        return {0, 0};
+        throw std :: invalid_argument("Cannot sub matrixes");
     }
 
     if(a.matrix[0].size() != b.matrix[0].size()){
-        return {0, 0};
+        throw std :: invalid_argument("Cannot sub matrixes");
     }
 
     Matrix result = a;
@@ -95,7 +98,7 @@ Matrix Matrix :: sub_matrix(const Matrix& a, const Matrix& b) {
 
 Matrix Matrix :: mul_matrix(const Matrix& a, const Matrix& b) {
     if(a.matrix[0].size() != b.matrix.size()){
-        return {0, 0};
+        throw std :: invalid_argument("Cannot mul matrixes");
     }
 
     Matrix result(a.matrix.size(), b.matrix[0].size());
@@ -111,13 +114,25 @@ Matrix Matrix :: mul_matrix(const Matrix& a, const Matrix& b) {
     return result;
 }
 
+Matrix Matrix :: mul_scalar_matrix(const Matrix& a, double scalar) {
+    Matrix result = a;
+
+    for(int i = 0; i < result.matrix.size(); i++){
+        for(int j = 0; j < result.matrix[0].size(); j++){
+            result.matrix[i][j] *= scalar;
+        }
+    }
+
+    return result;
+}
+
 Matrix Matrix :: div_matrix(const Matrix& a, const Matrix& b) {
     if(a.matrix.size() != b.matrix.size()){
-        return {0, 0};
+        throw std :: invalid_argument("Cannot div matrixes");
     }
 
     if(a.matrix[0].size() != b.matrix[0].size()){
-        return {0, 0};
+        throw std :: invalid_argument("Cannot div matrixes");
     }
 
     Matrix result = a;
@@ -133,11 +148,11 @@ Matrix Matrix :: div_matrix(const Matrix& a, const Matrix& b) {
 
 Matrix Matrix :: mul_simple_matrix(const Matrix &a, const Matrix &b) {
     if(a.matrix.size() != b.matrix.size()){
-        return {0, 0};
+        throw std :: invalid_argument("Cannot mul simple matrixes");
     }
 
     if(a.matrix[0].size() != b.matrix[0].size()){
-        return {0, 0};
+        throw std :: invalid_argument("Cannot mul simple matrixes");
     }
 
     Matrix result = a;

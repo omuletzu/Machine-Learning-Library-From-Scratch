@@ -43,6 +43,7 @@ public:
     static Matrix add_broadcast_matrix(const Matrix& a, const Matrix& b);
     static Matrix sub_matrix(const Matrix& a, const Matrix& b);
     static Matrix mul_matrix(const Matrix& a, const Matrix& b);
+    static Matrix mul_scalar_matrix(const Matrix& a, double scalar);
     static Matrix mul_simple_matrix(const Matrix& a, const Matrix& b);
     static Matrix div_matrix(const Matrix& a, const Matrix& b);
     static Matrix transpose(const Matrix& a);

@@ -50,6 +50,10 @@ bool ML :: load_model_file(std::string& filename) {
 void ML :: update_model_file() {
     std :: ofstream log_weight_bias = std :: ofstream(this -> filename);
 
+    if(!log_weight_bias.is_open()) {
+        throw std :: invalid_argument("Couldn't modify weight and bias file");
+    }
+
     log_weight_bias << this -> layers_number << "\n";
 
     for(int i = 0; i < this -> layers_number; i++){
@@ -194,10 +198,7 @@ void correct_weight_bias(Layer& layer, Matrix gradient_values, Matrix& activatio
     std :: vector<std :: vector<double>> weight_matrix_get = layer.matrix_weight.get_matrix();
     std :: vector<std :: vector<double>> weight_gradient_matrix_get = weight_gradient_matrix.get_matrix();
 
-    std :: vector<std :: vector<double>> divide_multiple_active_inputs_matrix = std :: vector<std :: vector<double>>(
-            weight_gradient_matrix_get.size(), std :: vector<double>(weight_gradient_matrix_get[0].size(), 1 / gradient_values.get_matrix()[0].size())
-            );
-    Matrix divide_multiple_active_inputs = Matrix(divide_multiple_active_inputs_matrix);
+    weight_gradient_matrix = Matrix :: mul_scalar_matrix(weight_gradient_matrix, 1.0 / gradient_values.get_matrix()[0].size());
 
     for(int i = 0; i < weight_matrix_get.size(); i++) {
         for(int j = 0; j < weight_matrix_get[i].size(); j++) {

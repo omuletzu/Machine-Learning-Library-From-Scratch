@@ -82,22 +82,23 @@ int main() {
             std :: vector<uint8_t> dataset_labels;
             bool model_training = false;
 
-            if(state == 3){
-                dataset = read_dataset("mnist/train-images-idx3-ubyte");
-                dataset_labels = read_dataset_labels("mnist/train-labels-idx1-ubyte");
-                model_training = true;
-            }
-            else{
-                dataset = read_dataset("mnist/t10k-images-idx3-ubyte");
-                dataset_labels = read_dataset_labels("mnist/t10k-labels-idx1-ubyte");
-            }
-
             int epoch_iterations = 0;
             int input_batch_size = 0;
             double learning_rate = 0.0;
 
-            std :: cout << "Epoch number of iterations:\n";
-            std :: cin >> epoch_iterations;
+            if(state == 3){
+                dataset = read_dataset("mnist/train-images-idx3-ubyte");
+                dataset_labels = read_dataset_labels("mnist/train-labels-idx1-ubyte");
+                model_training = true;
+
+                std :: cout << "Epoch number of iterations:\n";
+                std :: cin >> epoch_iterations;
+            }
+            else{
+                dataset = read_dataset("mnist/t10k-images-idx3-ubyte");
+                dataset_labels = read_dataset_labels("mnist/t10k-labels-idx1-ubyte");
+                epoch_iterations = 1;
+            }
 
             std :: cout << "\nInput batch size:\n";
             std :: cin >> input_batch_size;
@@ -146,17 +147,19 @@ int main() {
                             model_training
                             );
 
+                    double partial_loss_old = partial_loss;
+
                     for(int k = 0; k < input_batch_size; k++){
                         partial_loss += activated_output.at(0, k);
                     }
 
-                    std :: cout << "Iteration " << i << " Subiteration " << j << "\n";
+                    loss_log << "Epoch " << i << " Batch " << j / input_batch_size << " Loss " << (partial_loss - partial_loss_old) / input_batch_size << "\n";
                 }
 
                 partial_loss /= dataset.size();
                 total_loss += partial_loss;
 
-                loss_log << "For iteration " << i << " loss " << partial_loss << "\n";
+                loss_log << "For Epoch " << i << " loss " << partial_loss << "\n";
             }
 
             model.update_model_file();
