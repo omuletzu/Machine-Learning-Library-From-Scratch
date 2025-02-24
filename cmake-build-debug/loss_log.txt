@@ -1,0 +1,2 @@
+For iteration 0 loss 2.0781
+Final loss 2.0781

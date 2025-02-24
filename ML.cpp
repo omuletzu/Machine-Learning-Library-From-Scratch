@@ -28,9 +28,6 @@ bool ML :: load_model_file(std::string& filename) {
             fin >> this -> nodes_per_layer_list[i];
         }
 
-        //std :: ifstream aux_not_used_istream("");
-        //this -> layers_list.emplace_back(this -> nodes_per_layer_list[0], 0, aux_not_used_istream);
-
         this -> layers_list.emplace_back();
 
         for(int i = 1; i < this -> layers_number; i++){
@@ -51,12 +48,12 @@ bool ML :: load_model_file(std::string& filename) {
 }
 
 void ML :: update_model_file() {
-    std :: ofstream fout = std :: ofstream(this -> filename);
+    std :: ofstream log_weight_bias = std :: ofstream(this -> filename);
 
-    fout << this -> layers_number << "\n";
+    log_weight_bias << this -> layers_number << "\n";
 
     for(int i = 0; i < this -> layers_number; i++){
-        fout << this -> nodes_per_layer_list[i] << "\n";
+        log_weight_bias << this -> nodes_per_layer_list[i] << "\n";
     }
 
     for(int i = 1; i < this -> layers_list.size(); i++) {
@@ -65,14 +62,14 @@ void ML :: update_model_file() {
 
         for(int j = 0; j < this -> layers_list[i].current_layer_nodes; j++){
             for(int k = 0; k < this -> layers_list[i].prev_layer_nodes; k++){
-                fout << weight_matrix.at(j, k) << " ";
+                log_weight_bias << weight_matrix.at(j, k) << " ";
             }
 
-            fout << bias_matrix.at(j, 0) << "\n";
+            log_weight_bias << bias_matrix.at(j, 0) << "\n";
         }
     }
 
-    fout.close();
+    log_weight_bias.close();
 }
 
 Matrix ML :: MSE_loss_function(Matrix output, std :: vector<std :: vector<double>> expected_output) {
@@ -166,12 +163,10 @@ Matrix ML :: forward(Matrix& input,
     this -> deactivated_value_per_layer[0] = input;
     this -> activated_value_per_layers[0] = input;
 
-    hidden_activation(this -> activated_value_per_layers[0]);
-
     Matrix partial_result = input;
 
     for(int i = 1; i < this -> layers_list.size(); i++) {
-        partial_result = Matrix :: add_matrix(Matrix :: mul_matrix(this -> layers_list[i].matrix_weight, partial_result), this -> layers_list[i].matrix_bias);
+        partial_result = Matrix :: add_broadcast_matrix(Matrix :: mul_matrix(this -> layers_list[i].matrix_weight, partial_result), this -> layers_list[i].matrix_bias);
 
         this -> deactivated_value_per_layer[i] = partial_result;
 

@@ -57,6 +57,22 @@ Matrix Matrix :: add_matrix(const Matrix& a, const Matrix& b) {
     return result;
 }
 
+Matrix Matrix :: add_broadcast_matrix(const Matrix& a, const Matrix& b) {
+    if(a.matrix.size() != b.matrix.size() || b.matrix[0].size() != 1){
+        return Matrix{0, 0};
+    }
+
+    Matrix result = a;
+
+    for(int i = 0; i < a.matrix[0].size(); i++){
+        for(int j = 0; j < a.matrix.size(); j++){
+            result.matrix[j][i] += b.matrix[j][0];
+        }
+    }
+
+    return result;
+}
+
 Matrix Matrix :: sub_matrix(const Matrix& a, const Matrix& b) {
     if(a.matrix.size() != b.matrix.size()){
         return {0, 0};

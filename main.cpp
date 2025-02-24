@@ -149,6 +149,8 @@ int main() {
                     for(int k = 0; k < input_batch_size; k++){
                         partial_loss += activated_output.at(0, k);
                     }
+
+                    std :: cout << "Iteration " << i << " Subiteration " << j << "\n";
                 }
 
                 partial_loss /= dataset.size();

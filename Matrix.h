@@ -40,6 +40,7 @@ public:
     void set(int i, int j, double value);
     static void print_matrix(const Matrix& a);
     static Matrix add_matrix(const Matrix& a, const Matrix& b);
+    static Matrix add_broadcast_matrix(const Matrix& a, const Matrix& b);
     static Matrix sub_matrix(const Matrix& a, const Matrix& b);
     static Matrix mul_matrix(const Matrix& a, const Matrix& b);
     static Matrix mul_simple_matrix(const Matrix& a, const Matrix& b);
